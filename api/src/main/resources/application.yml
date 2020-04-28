@@ -29,7 +29,7 @@ mybatis:
   # mapper 映射文件
   mapper-locations: classpath:mapper/*.xml
 mapper:
-  mappers: com.imooc.mapper.core.CoreMapper
+  mappers: com.imooc.core.CoreMapper
   not-empty: false
   identity: MYSQL
 server:

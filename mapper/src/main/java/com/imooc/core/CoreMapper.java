@@ -1,4 +1,4 @@
-package com.imooc.mapper.core;
+package com.imooc.core;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
