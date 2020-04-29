@@ -1,6 +1,7 @@
 package com.imooc.controller;
 
 import com.imooc.service.UserService;
+import com.imooc.utils.JsonResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +19,14 @@ public class PassportController {
     }
 
     @GetMapping("usernameExists")
-    public int usernameExists(@RequestParam String username) {
+    public JsonResult usernameExists(@RequestParam String username) {
         if (StringUtils.isBlank(username)) {
-            return 500;
+            return JsonResult.error("用户名不能为空");
         }
         boolean exist = userService.usernameExists(username);
         if (exist) {
-            return 500;
+            return JsonResult.error("用户名已经存在");
         }
-        return 200;
+        return JsonResult.ok();
     }
 }
