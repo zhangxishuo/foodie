@@ -3,7 +3,9 @@ package com.imooc.controller;
 import com.imooc.pojo.Stu;
 import com.imooc.service.StuService;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @RestController
 @RequestMapping("stu")
 public class StuFooController {

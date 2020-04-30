@@ -3,9 +3,12 @@ package com.imooc.controller;
 import com.imooc.pojo.bo.UserBO;
 import com.imooc.service.UserService;
 import com.imooc.utils.JsonResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping("passport")
 public class PassportController {
@@ -16,6 +19,7 @@ public class PassportController {
         this.userService = userService;
     }
 
+    @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在")
     @GetMapping("usernameExists")
     public JsonResult usernameExists(@RequestParam String username) {
         if (StringUtils.isBlank(username)) {
@@ -28,6 +32,8 @@ public class PassportController {
         return JsonResult.ok();
     }
 
+
+    @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping("register")
     public JsonResult register(@RequestBody UserBO userBO) {
         String username = userBO.getUsername();
