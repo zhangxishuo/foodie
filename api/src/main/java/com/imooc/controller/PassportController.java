@@ -1,5 +1,6 @@
 package com.imooc.controller;
 
+import com.imooc.pojo.Users;
 import com.imooc.pojo.bo.UserBO;
 import com.imooc.service.UserService;
 import com.imooc.utils.JsonResult;
@@ -60,6 +61,26 @@ public class PassportController {
         }
 
         userService.createUser(userBO);
+
+        return JsonResult.ok();
+    }
+
+    @ApiOperation(value = "用户登录", notes = "用户登录")
+    @PostMapping("login")
+    public JsonResult login(@RequestBody UserBO userBO) {
+        String username = userBO.getUsername();
+        String password = userBO.getPassword();
+
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password)) {
+            return JsonResult.error("用户名密码不能为空");
+        }
+
+        Users user = userService.queryUserForLogin(username, password);
+
+        if (user == null) {
+            return JsonResult.error("用户名密码不正确");
+        }
 
         return JsonResult.ok();
     }
