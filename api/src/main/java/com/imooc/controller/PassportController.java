@@ -20,7 +20,7 @@ public class PassportController {
     }
 
     @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在")
-    @GetMapping("usernameExists")
+    @GetMapping("usernameIsExist")
     public JsonResult usernameExists(@RequestParam String username) {
         if (StringUtils.isBlank(username)) {
             return JsonResult.error("用户名不能为空");
