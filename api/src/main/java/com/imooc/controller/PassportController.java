@@ -82,6 +82,8 @@ public class PassportController {
             return JsonResult.error("用户名密码不正确");
         }
 
+        user.setPassword(null);
+
         return JsonResult.ok();
     }
 }
