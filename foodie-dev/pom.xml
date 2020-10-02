@@ -10,6 +10,10 @@
 
     <modules>
         <module>foodie-common</module>
+        <module>foodie-pojo</module>
+        <module>foodie-mapper</module>
+        <module>foodie-service</module>
+        <module>foodie-api</module>
     </modules>
 
     <packaging>pom</packaging>
