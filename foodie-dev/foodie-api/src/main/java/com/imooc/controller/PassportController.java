@@ -4,12 +4,17 @@ import com.imooc.bo.UserBO;
 import com.imooc.pojo.Users;
 import com.imooc.service.UserService;
 import com.imooc.common.IMOOCJSONResult;
+import com.imooc.utils.IMOOCCookieUtils;
+import com.imooc.utils.IMOOCJsonUtils;
 import com.imooc.utils.IMOOCMD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
@@ -39,7 +44,9 @@ public class PassportController {
 
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("regist")
-    public IMOOCJSONResult register(@RequestBody UserBO userBO) {
+    public IMOOCJSONResult register(@RequestBody UserBO userBO,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPwd = userBO.getConfirmPassword();
@@ -68,14 +75,21 @@ public class PassportController {
         }
 
         // 5. 实现注册
-        userService.createUser(userBO);
+        Users user = userService.createUser(userBO);
+
+        setNullProperty(user);
+
+        IMOOCCookieUtils.setCookie(request, response, "user",
+                IMOOCJsonUtils.objectToJson(user), true);
 
         return IMOOCJSONResult.ok();
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("login")
-    public IMOOCJSONResult login(@RequestBody UserBO userBO) throws Exception {
+    public IMOOCJSONResult login(@RequestBody UserBO userBO,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
 
@@ -86,12 +100,26 @@ public class PassportController {
         }
 
         // 2. 实现登录
-        Users result = userService.queryUserForLogin(username, IMOOCMD5Utils.getMD5Str(password));
+        Users user = userService.queryUserForLogin(username, IMOOCMD5Utils.getMD5Str(password));
 
-        if (result == null) {
+        if (user == null) {
             return IMOOCJSONResult.errorMsg("用户名或密码不正确");
         }
 
-        return IMOOCJSONResult.ok(result);
+        setNullProperty(user);
+
+        IMOOCCookieUtils.setCookie(request, response, "user",
+                IMOOCJsonUtils.objectToJson(user), true);
+
+        return IMOOCJSONResult.ok(user);
+    }
+
+    private void setNullProperty(Users user) {
+        user.setPassword(null);
+        user.setMobile(null);
+        user.setEmail(null);
+        user.setCreatedTime(null);
+        user.setUpdatedTime(null);
+        user.setBirthday(null);
     }
 }
