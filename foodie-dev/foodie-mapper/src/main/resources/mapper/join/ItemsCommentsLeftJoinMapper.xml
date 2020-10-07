@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imooc.mapper.join.ItemsCommentsLeftJoinMapper">
-    <resultMap id="NewItemsVOResultMap" type="com.imooc.vo.NewItemsVO">
-        <id column="rootCatId" property="rootCatId" jdbcType="INTEGER"/>
-        <result column="rootCatName" property="rootCatName" jdbcType="VARCHAR"/>
-        <result column="slogan" property="slogan" jdbcType="VARCHAR"/>
-        <result column="catImage" property="catImage" jdbcType="VARCHAR"/>
-        <result column="bgColor" property="bgColor" jdbcType="VARCHAR"/>
-
-        <collection property="simpleItemList" ofType="com.imooc.vo.SimpleItemVO">
-            <id column="itemId" property="itemId" jdbcType="VARCHAR"/>
-            <result column="itemName" property="itemName" jdbcType="VARCHAR"/>
-            <result column="itemUrl" property="itemUrl" jdbcType="VARCHAR"/>
-        </collection>
+    <resultMap id="ItemCommentResultMap" type="com.imooc.vo.ItemCommentVO">
+        <result column="commentLevel" property="commentLevel" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="specName" property="specName" jdbcType="VARCHAR"/>
+        <result column="createdTime" property="createdTime" jdbcType="DATE"/>
+        <result column="userFace" property="userFace" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="queryItemComments" resultMap="NewItemsVOResultMap" parameterType="Map">
+    <select id="queryItemComments" resultMap="ItemCommentResultMap" parameterType="Map">
         SELECT
             ic.comment_level as commentLevel,
             ic.content as content,
@@ -25,6 +20,9 @@
             u.nickname as nickname
         FROM items_comments ic
         LEFT JOIN users u ON ic.user_id = u.id
-        WHERE ic.item_id = 'cake-1001' AND ic.comment_level = 1;
+        WHERE ic.item_id = #{paramsMap.itemId}
+        <if test="paramsMap.level != null and paramsMap.level != ''">
+            AND ic.comment_level = #{paramsMap.level};
+        </if>
     </select>
 </mapper>
