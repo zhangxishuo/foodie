@@ -22,7 +22,7 @@
         LEFT JOIN users u ON ic.user_id = u.id
         WHERE ic.item_id = #{paramsMap.itemId}
         <if test="paramsMap.level != null and paramsMap.level != ''">
-            AND ic.comment_level = #{paramsMap.level};
+            AND ic.comment_level = #{paramsMap.level}
         </if>
     </select>
 </mapper>

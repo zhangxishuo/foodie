@@ -1,5 +1,6 @@
 package com.imooc.service;
 
+import com.imooc.common.IMOOCPagedGridResult;
 import com.imooc.pojo.Items;
 import com.imooc.pojo.ItemsImg;
 import com.imooc.pojo.ItemsParam;
@@ -21,5 +22,5 @@ public interface ItemService {
 
     CommentLevelCountsVO queryCommentCounts(String itemId);
 
-    List<ItemCommentVO> queryPagedComments(String itemId, Integer level);
+    IMOOCPagedGridResult<ItemCommentVO> queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize);
 }

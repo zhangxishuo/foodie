@@ -1,5 +1,8 @@
 package com.imooc.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.imooc.common.IMOOCPagedGridResult;
 import com.imooc.enums.CommentLevel;
 import com.imooc.mapper.*;
 import com.imooc.mapper.join.ItemsCommentsLeftJoinMapper;
@@ -85,11 +88,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    public List<ItemCommentVO> queryPagedComments(String itemId, Integer level) {
+    public IMOOCPagedGridResult<ItemCommentVO> queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("itemId", itemId);
         map.put("level", level);
-        return itemsCommentsLeftJoinMapper.queryItemComments(map);
+
+        PageHelper.startPage(page, pageSize);
+        List<ItemCommentVO> list = itemsCommentsLeftJoinMapper.queryItemComments(map);
+        return setterPagedGrid(list, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -100,5 +106,15 @@ public class ItemServiceImpl implements ItemService {
             condition.setCommentLevel(level);
         }
         return itemsCommentsMapper.selectCount(condition);
+    }
+
+    private <T> IMOOCPagedGridResult<T> setterPagedGrid(List<T> list, Integer page) {
+        PageInfo<T> pageList = new PageInfo<>(list);
+        IMOOCPagedGridResult<T> grid = new IMOOCPagedGridResult<>();
+        grid.setPage(page);
+        grid.setRows(list);
+        grid.setTotal(pageList.getPages());
+        grid.setRecords(pageList.getTotal());
+        return grid;
     }
 }

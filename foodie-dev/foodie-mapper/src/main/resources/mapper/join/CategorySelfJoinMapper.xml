@@ -27,7 +27,7 @@
             c.father_id as subFatherId
         FROM category f
         LEFT JOIN category c ON f.id = c.father_id
-        WHERE f.father_id = #{rootCatId};
+        WHERE f.father_id = #{rootCatId}
     </select>
 
     <resultMap id="NewItemsVOResultMap" type="com.imooc.vo.NewItemsVO">
@@ -60,6 +60,6 @@
         LEFT JOIN items_img ii ON i.id = ii.item_id
         WHERE f.type = 1 AND i.root_cat_id = ${paramsMap.rootCatId} AND ii.is_main = 1
         ORDER BY i.created_time DESC
-        LIMIT 0, 6;
+        LIMIT 0, 6
     </select>
 </mapper>

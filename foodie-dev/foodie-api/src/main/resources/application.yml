@@ -51,3 +51,7 @@ mapper:
   mappers: com.imooc.mapper.core.CoreMapper
   not-empty: false
   identity: MYSQL
+# 分页插件配置
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
