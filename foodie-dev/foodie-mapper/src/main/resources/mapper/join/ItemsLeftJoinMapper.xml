@@ -72,4 +72,33 @@
             </otherwise>
         </choose>
     </select>
+
+    <resultMap id="ShopCartResultMap" type="com.imooc.vo.ShopCartVO">
+        <id column="itemId" property="itemId" jdbcType="VARCHAR" />
+        <result column="itemName" property="itemName" jdbcType="VARCHAR" />
+        <result column="itemImgUrl" property="itemImgUrl" jdbcType="VARCHAR" />
+        <result column="specId" property="specId" jdbcType="VARCHAR" />
+        <result column="specName" property="specName" jdbcType="VARCHAR" />
+        <result column="priceDiscount" property="priceDiscount" jdbcType="VARCHAR" />
+        <result column="priceNormal" property="priceNormal" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="queryItemsBySpecIds" resultMap="ShopCartResultMap" parameterType="List">
+        SELECT
+            items.id as itemId,
+            items.item_name as itemName,
+            items_img.url as itemImgUrl,
+            items_spec.id as specId,
+            items_spec.name as specName,
+            items_spec.price_discount as priceDiscount,
+            items_spec.price_normal as priceNormal
+        FROM items_spec
+        LEFT JOIN items ON items_spec.item_id = items.id
+        LEFT JOIN items_img ON items_img.item_id = items.id
+        WHERE items_img.is_main = 1
+        AND items_spec.id IN
+        <foreach collection="paramsList" index="index" item="specId" open="(" separator="," close=")">
+            #{specId}
+        </foreach>
+    </select>
 </mapper>

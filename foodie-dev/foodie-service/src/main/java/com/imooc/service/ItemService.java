@@ -8,6 +8,7 @@ import com.imooc.pojo.ItemsSpec;
 import com.imooc.vo.CommentLevelCountsVO;
 import com.imooc.vo.ItemCommentVO;
 import com.imooc.vo.SearchItemsVO;
+import com.imooc.vo.ShopCartVO;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface ItemService {
     IMOOCPagedGridResult<SearchItemsVO> searchItems(String keywords, String sort, Integer page, Integer pageSize);
 
     IMOOCPagedGridResult<SearchItemsVO> searchItems(Integer catId, String sort, Integer page, Integer pageSize);
+
+    List<ShopCartVO> queryItemsBySpecIds(String specIds);
 }
