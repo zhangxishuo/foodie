@@ -10,6 +10,7 @@ import com.imooc.service.ItemService;
 import com.imooc.vo.CommentLevelCountsVO;
 import com.imooc.vo.ItemCommentVO;
 import com.imooc.vo.ItemInfoVO;
+import com.imooc.vo.SearchItemsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -78,6 +79,28 @@ public class ItemsController extends BaseController {
         }
 
         IMOOCPagedGridResult<ItemCommentVO> grid = itemService.queryPagedComments(itemId, level, page, pageSize);
+        return IMOOCJSONResult.ok(grid);
+    }
+
+    @ApiOperation(value = "搜索商品列表", notes = "搜索商品列表", httpMethod = "GET")
+    @GetMapping("/search")
+    public IMOOCJSONResult search(@ApiParam(name = "keywords", value = "关键字", required = true) @RequestParam String keywords,
+                                  @ApiParam(name = "sort", value = "排序") @RequestParam String sort,
+                                  @ApiParam(name = "page", value = "查询下一页的第几页") @RequestParam Integer page,
+                                  @ApiParam(name = "pageSize", value = "分页的每一页显示的条数") @RequestParam Integer pageSize) {
+        if (StringUtils.isBlank(keywords)) {
+            return IMOOCJSONResult.errorMsg(null);
+        }
+
+        if (page == null) {
+            page = 1;
+        }
+
+        if (pageSize == null) {
+            pageSize = PAGE_SIZE;
+        }
+
+        IMOOCPagedGridResult<SearchItemsVO> grid = itemService.searchItems(keywords, sort, page, pageSize);
         return IMOOCJSONResult.ok(grid);
     }
 }

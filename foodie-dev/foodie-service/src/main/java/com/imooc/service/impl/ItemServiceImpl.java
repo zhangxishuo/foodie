@@ -6,11 +6,13 @@ import com.imooc.common.IMOOCPagedGridResult;
 import com.imooc.enums.CommentLevel;
 import com.imooc.mapper.*;
 import com.imooc.mapper.join.ItemsCommentsLeftJoinMapper;
+import com.imooc.mapper.join.ItemsLeftJoinMapper;
 import com.imooc.pojo.*;
 import com.imooc.service.ItemService;
 import com.imooc.utils.IMOOCDesensitizationUtils;
 import com.imooc.vo.CommentLevelCountsVO;
 import com.imooc.vo.ItemCommentVO;
+import com.imooc.vo.SearchItemsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,6 +38,8 @@ public class ItemServiceImpl implements ItemService {
     private ItemsCommentsMapper itemsCommentsMapper;
     @Autowired
     private ItemsCommentsLeftJoinMapper itemsCommentsLeftJoinMapper;
+    @Autowired
+    private ItemsLeftJoinMapper itemsLeftJoinMapper;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -101,6 +105,18 @@ public class ItemServiceImpl implements ItemService {
             item.setNickname(IMOOCDesensitizationUtils.commonDisplay(item.getNickname()));
         }
 
+        return setterPagedGrid(list, page);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public IMOOCPagedGridResult<SearchItemsVO> searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keywords", keywords);
+        map.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> list = itemsLeftJoinMapper.searchItems(map);
         return setterPagedGrid(list, page);
     }
 

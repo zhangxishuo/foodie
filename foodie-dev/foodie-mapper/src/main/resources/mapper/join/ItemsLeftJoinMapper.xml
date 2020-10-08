@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.join.ItemsLeftJoinMapper" >
+    <resultMap id="SearchItemsResultMap" type="com.imooc.vo.SearchItemsVO" >
+        <id column="itemId" property="itemId" jdbcType="VARCHAR" />
+        <result column="itemName" property="itemName" jdbcType="VARCHAR" />
+        <result column="sellCounts" property="sellCounts" jdbcType="INTEGER" />
+        <result column="imgUrl" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="searchItems" resultMap="SearchItemsResultMap" parameterType="Map">
+        SELECT
+            i.id as itemId,
+            i.item_name as itemName,
+            i.sell_counts as sellCounts,
+            ii.url as imgUrl,
+            temp.price_discount as price
+        FROM items i
+        LEFT JOIN items_img ii ON i.id = ii.item_id
+        LEFT JOIN (
+            SELECT item_id, MIN(price_discount) as price_discount
+            FROM items_spec
+            GROUP BY item_id
+        ) temp ON i.id = temp.item_id
+        WHERE ii.is_main = 1
+        <if test="paramsMap.keywords != null and paramsMap.keywords != ''">
+            AND i.item_name like '%${paramsMap.keywords}%'
+        </if>
+        ORDER BY
+        <choose>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                i.sell_counts DESC
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot;">
+                temp.price_discount ASC
+            </when>
+            <otherwise>
+                i.item_name ASC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

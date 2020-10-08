@@ -7,6 +7,7 @@ import com.imooc.pojo.ItemsParam;
 import com.imooc.pojo.ItemsSpec;
 import com.imooc.vo.CommentLevelCountsVO;
 import com.imooc.vo.ItemCommentVO;
+import com.imooc.vo.SearchItemsVO;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface ItemService {
     CommentLevelCountsVO queryCommentCounts(String itemId);
 
     IMOOCPagedGridResult<ItemCommentVO> queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize);
+
+    IMOOCPagedGridResult<SearchItemsVO> searchItems(String keywords, String sort, Integer page, Integer pageSize);
 }
