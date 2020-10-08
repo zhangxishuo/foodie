@@ -11,4 +11,6 @@ import java.util.Map;
 public interface ItemsLeftJoinMapper {
 
     List<SearchItemsVO> searchItems(@Param("paramsMap") Map<String, Object> map);
+
+    List<SearchItemsVO> searchItemsByThirdCat(@Param("paramsMap") Map<String, Object> map);
 }
