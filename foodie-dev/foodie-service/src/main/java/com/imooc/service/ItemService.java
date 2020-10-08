@@ -26,4 +26,6 @@ public interface ItemService {
     IMOOCPagedGridResult<ItemCommentVO> queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize);
 
     IMOOCPagedGridResult<SearchItemsVO> searchItems(String keywords, String sort, Integer page, Integer pageSize);
+
+    IMOOCPagedGridResult<SearchItemsVO> searchItems(Integer catId, String sort, Integer page, Integer pageSize);
 }

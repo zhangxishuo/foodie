@@ -121,6 +121,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public IMOOCPagedGridResult<SearchItemsVO> searchItems(Integer catId, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("catId", catId);
+        map.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> list = itemsLeftJoinMapper.searchItems(map);
+        return setterPagedGrid(list, page);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
     Integer getCommentCounts(String itemId, Integer level) {
         ItemsComments condition = new ItemsComments();
         condition.setItemId(itemId);
