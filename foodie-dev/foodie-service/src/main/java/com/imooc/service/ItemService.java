@@ -31,4 +31,8 @@ public interface ItemService {
     IMOOCPagedGridResult<SearchItemsVO> searchItems(Integer catId, String sort, Integer page, Integer pageSize);
 
     List<ShopCartVO> queryItemsBySpecIds(String specIds);
+
+    ItemsSpec queryItemSpecById(String itemSpecId);
+
+    String queryItemMainImgById(String itemId);
 }
