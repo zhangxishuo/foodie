@@ -157,6 +157,19 @@ public class ItemServiceImpl implements ItemService {
         return result != null ? result.getUrl() : "";
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void decreaseItemSpecStock(String itemSpecId, int buyCounts) {
+        // synchronized 不推荐使用 集群下无用 性能低下
+        // 锁数据库 不推荐 导致数据库性能低下
+        // 分布式锁 zookeeper redis
+
+        int result = itemsLeftJoinMapper.decreaseItemSpecStock(itemSpecId, buyCounts);
+        if (result != 1) {
+            throw new RuntimeException("订单创建失败，原因：库存不足!");
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     Integer getCommentCounts(String itemId, Integer level) {
         ItemsComments condition = new ItemsComments();
