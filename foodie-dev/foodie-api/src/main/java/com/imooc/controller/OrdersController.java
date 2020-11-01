@@ -4,6 +4,7 @@ import com.imooc.bo.SubmitOrderBO;
 import com.imooc.common.IMOOCJSONResult;
 import com.imooc.enums.PayMethod;
 import com.imooc.service.OrderService;
+import com.imooc.utils.IMOOCCookieUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(value = "订单相关", tags = {"订单相关的api接口"})
 @RequestMapping("orders")
 @RestController
-public class OrdersController {
+public class OrdersController extends BaseController {
 
     @Autowired
     private OrderService orderService;
@@ -34,8 +35,20 @@ public class OrdersController {
         }
 
         // 1. 创建订单
-        orderService.createOrder(submitOrderBO);
+        String orderId = orderService.createOrder(submitOrderBO);
 
-        return IMOOCJSONResult.ok();
+        // 2. 创建订单以后，移除购物车中已结算（已提交）的商品
+        /*
+         * 1001
+         * 2002 -> 用户购买
+         * 3003 -> 用户购买
+         * 4004
+         */
+        // TODO 整合redis之后，完善购物车中的已结算商品清除，并且同步到前端的cookie
+        // IMOOCCookieUtils.setCookie(request, response, FOODIE_SHOPCART, "", true);
+
+        // 3. 向支付中心发送当前订单，用于保存支付中心的订单数据
+
+        return IMOOCJSONResult.ok(orderId);
     }
 }
